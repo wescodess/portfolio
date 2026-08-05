@@ -1,35 +1,50 @@
 <template>
-    <div :style="{ 'transform': `translateX(${transformValue}%)` }" ref="target" :data-t="transformValue"
-        :class="`frame-wrapper w-full transition-transform duration-[0] ease-in-out overflow-x-hidden  text-white border-grey-700 border grid grid-cols-1 md:grid-cols-4`">
-        <div v-for=" item in data" :key="item.name"
-            class=" border border-grey-700 flex  items-center justify-center py-8 flex-col">
-            <img class=" w-12 h-12" :src="$urlFor(item.icon).url()" alt="framework">
-            <h4 class=" text-slate-400 text-sm mt-2">{{ item.title }}</h4>
-        </div>
-    </div>
+  <section
+    v-if="frameworks.length"
+    ref="frameworkStrip"
+    data-motion-section="frameworks"
+    class="w-full overflow-hidden border-y border-grey-700 text-white"
+    aria-labelledby="frameworks-heading"
+  >
+    <h2 id="frameworks-heading" class="sr-only">Technologies and frameworks</h2>
+    <motion.div
+      :style="{ x: frameworkX }"
+      class="-ml-12 grid w-[calc(100%+6rem)] grid-cols-2 md:grid-cols-4"
+    >
+      <article
+        v-for="framework in frameworks"
+        :key="framework._key"
+        class="flex flex-col items-center justify-center border border-grey-700 py-8"
+      >
+        <NuxtImg
+          v-if="iconUrl(framework.icon)"
+          class="h-12 w-12 object-contain"
+          :src="iconUrl(framework.icon)"
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+        />
+        <h3 class="mt-2 text-sm text-slate-400">{{ framework.title }}</h3>
+      </article>
+    </motion.div>
+  </section>
 </template>
-<script setup>
-import { ref} from 'vue'
-import { useScroll, useElementBounding} from '@vueuse/core'
 
+<script setup lang="ts">
+import { motion, useScroll, useTransform } from 'motion-v'
+import type { FrameworkItem, SanityImage } from '~/types/portfolio'
 
-const sanity = useSanity()
-const query = groq`*[_type == "frameworks"][0].frameworks`
-const { data, refresh } = await useAsyncData('frameworks', () => sanity.fetch(query))
-const target = ref(null)
-const { top,width} = useElementBounding(target)
-const transformValue = ref(0)
-const handleScroll = () => {
-    const ratio=(width.value/y.value * 100)
-    const min = (y.value - top.value) * (100 / y.value) - (ratio+20)
-    transformValue.value = min
+defineProps<{ frameworks: FrameworkItem[] }>()
+
+const frameworkStrip = useTemplateRef<HTMLElement>('frameworkStrip')
+const { scrollYProgress } = useScroll({
+  target: frameworkStrip,
+  offset: ['start end', 'end start'],
+})
+const frameworkX = useTransform(scrollYProgress, [0, 1], ['-3rem', '3rem'])
+
+function iconUrl(image: SanityImage | null): string {
+  return sanityImage(image)?.width(96).height(96).url() || ''
 }
-const {y} = useScroll(window, { behavior: 'smooth', onScroll: handleScroll })
 </script>
-<style >
-.frame-wrapper {
-    position: relative;
-    left: -200px;
-    transition: all .1s linear;
-}
-</style>

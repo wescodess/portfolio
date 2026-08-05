@@ -1,18 +1,29 @@
 <template>
-    <div  class=" grid grid-cols-1 md:grid-cols-2 text-black">
-        <div class=" w-full h-full bg-grey-200 flex flex-col justify-center items-center">
-            <div class=" max-w-md px-4 md:px-0 flex py-20 flex-col justify-center ">
-                <h1 class="  text-5xl text-black mb-6 font-allrox font-bold">{{data.title}}</h1>
-                <p class=" text-md ">{{data.subtitle}}</p>
-            </div>
-        </div>
-        <div class="w-full h-auto">
-            <img class="w-full h-full object-cover" :src="$urlFor(data.image).url()" alt="logo">
-        </div>
-</div>
+  <div class="grid grid-cols-1 bg-grey-200 text-black md:grid-cols-2">
+    <div class="flex min-h-96 w-full flex-col items-center justify-center">
+      <div class="flex max-w-md flex-col justify-center px-4 py-20 md:px-0">
+        <h2 id="about-heading" class="mb-6 text-5xl font-bold">{{ about.title }}</h2>
+        <p class="leading-relaxed">{{ about.subtitle }}</p>
+      </div>
+    </div>
+    <div class="min-h-96 w-full">
+      <NuxtImg
+        v-if="imageUrl"
+        class="h-full w-full object-cover"
+        :src="imageUrl"
+        alt="Portrait of Wesley Ukadike"
+        width="1200"
+        height="1200"
+        sizes="100vw md:50vw"
+        loading="lazy"
+      />
+    </div>
+  </div>
 </template>
-<script setup>
-const sanity = useSanity()
-const query = groq`*[_type == "about"][0]`
-const { data, refresh } = await useAsyncData('about', () => sanity.fetch(query))
+
+<script setup lang="ts">
+import type { AboutContent } from '~/types/portfolio'
+
+const { about } = defineProps<{ about: AboutContent }>()
+const imageUrl = computed(() => sanityImage(about.image)?.width(1200).height(1200).quality(82).url() || '')
 </script>

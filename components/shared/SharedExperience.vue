@@ -1,27 +1,40 @@
 <template>
-    <div class=" w-full">
-        <div ref="shw" class="grid gap-4 grid-cols-12 items-center shw w-full">
-            <img class="col-span-3 md:col-span-2" :src="$urlFor(experience.logo).url()" alt="logo">
-            <div class=" col-span-9 md:col-span-7 ml-2 mr-4 md:ml-4 md:mr-12  ">
-                <h4 class=" text-lg"> {{ experience.role }}</h4>
-                <div class=" col-span-3  md:hidden">
-                    <h5 class=" text-sm ">{{ experience.company }}</h5>
-                    <h6 class=" text-xs text-slate-400 ">{{ experience.start }} - {{ experience.end }}</h6>
-                </div>
-            </div>
-            <div class=" col-span-3 hidden md:block">
-                <h5 class=" text-sm uppercase">{{ experience.company }}</h5>
-                <h6 class="text-xs text-slate-400 font-allrox font-light ">{{ experience.start }} - {{ experience.end }}</h6>
-            </div>
+  <article class="w-full">
+    <div class="grid w-full grid-cols-12 items-center gap-4">
+      <NuxtImg
+        v-if="logoUrl"
+        class="col-span-3 h-16 w-16 object-contain md:col-span-2"
+        :src="logoUrl"
+        :alt="`${experience.company} logo`"
+        width="96"
+        height="96"
+        sizes="64px md:96px"
+        loading="lazy"
+      />
+      <div class="col-span-9 ml-2 md:col-span-7 md:ml-4 md:mr-12">
+        <h3 class="text-lg">{{ experience.role }}</h3>
+        <div class="md:hidden">
+          <p class="text-sm">{{ experience.company }}</p>
+          <p class="text-xs text-slate-400">{{ dateRange }}</p>
         </div>
-        <hr v-if="!isLast" class=" border-grey-700 mt-6 md:mt-10"/>
+      </div>
+      <div class="col-span-3 hidden md:block">
+        <p class="text-sm uppercase">{{ experience.company }}</p>
+        <p class="text-xs font-light text-slate-400">{{ dateRange }}</p>
+      </div>
     </div>
+    <hr v-if="!isLast" class="mt-6 border-grey-700 md:mt-10" >
+  </article>
 </template>
-<script setup>
-import { ref, watchEffect } from 'vue'
-import { filename } from 'pathe/utils';
-const props = defineProps({
-    experience: Object,
-    isLast:Boolean
-})
+
+<script setup lang="ts">
+import type { ExperienceItem } from '~/types/portfolio'
+
+const { experience, isLast = false } = defineProps<{
+  experience: ExperienceItem
+  isLast?: boolean
+}>()
+
+const dateRange = computed(() => `${experience.start} – ${experience.end || 'Present'}`)
+const logoUrl = computed(() => sanityImage(experience.logo)?.width(192).height(192).url() || '')
 </script>

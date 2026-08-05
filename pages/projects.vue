@@ -1,42 +1,98 @@
 <template>
-    <div>
-        <SharedNav :opacity="0" :top="0" id="navRef" ref="navRef" class="z-40 " />
-        <div v-setnav="'light'" class="px-4 md:px-16 xl:px-40 py-10 md:py-40 text-white">
-        <masonry-wall :items="masonryItems" :ssr-columns="2" :column-width="columnWidth" :gap="40" rtl>
-            <template #default="{ item, index }">
-                <div v-if="index === 0" class=" py-4">
-                    <h4 class=" text-sm text-slate-400">MY PROJECTS</h4>
-                    <h2 class=" text-5xl !leading-tight font-allrox">Work that I've done over the years</h2>
-                </div>
-                <div v-else-if="index >= masonryItems.length - 1" class=" w-full flex justify-center my-28">
-                    <NuxtLink to="/#projects">
-                        <button
-                            class=" px-8 py-3  rounded-full bg-transparent ring ring-indigo-300 uppercase text-white hover:bg-indigo-300  hover:text-white transition-all ">Go Back</button>
-                    </NuxtLink>
-                </div>
-                <div v-else>
-                    <SharedProjectCard v-visible.always="animate.popInBottom" 
-                        :project="item" />
-                </div>
+  <main id="main-content" class="min-h-dvh bg-black text-white">
+    <SharedNav :top="0" />
 
-            </template>
-        </masonry-wall>
-    </div>
-    </div>
+    <section class="px-4 py-16 md:px-16 md:py-28 xl:px-40" aria-labelledby="projects-heading">
+      <motion.div
+        data-motion-section="all-projects-copy"
+        :variants="revealGroup"
+        initial="hidden"
+        animate="visible"
+        class="mb-14 max-w-3xl"
+      >
+        <motion.p :variants="popInBottom" class="text-sm uppercase tracking-widest text-slate-400">
+          Selected work
+        </motion.p>
+        <motion.h1 id="projects-heading" :variants="popInBottom" class="mt-3 text-5xl font-bold leading-tight md:text-7xl">
+          Work I’ve done over the years
+        </motion.h1>
+      </motion.div>
+
+      <div v-if="error" class="rounded-xl border border-red-400/50 p-8" role="alert">
+        <h2 class="text-2xl font-bold">Projects are temporarily unavailable</h2>
+        <button class="mt-5 rounded-full border border-white px-6 py-3" @click="() => refresh()">
+          Try again
+        </button>
+      </div>
+
+      <motion.div
+        v-else-if="projects.length"
+        data-motion-section="all-projects-list"
+        :variants="revealGroup"
+        initial="hidden"
+        while-in-view="visible"
+        :in-view-options="revealViewport"
+        class="grid grid-cols-1 gap-10 lg:grid-cols-2"
+      >
+        <motion.div
+          v-for="project in projects"
+          :key="project._key"
+          :variants="popInBottom"
+        >
+          <SharedProjectCard :project="project" />
+        </motion.div>
+      </motion.div>
+
+      <p v-else class="text-slate-300" role="status">No projects are available right now.</p>
+
+      <NuxtLink
+        to="/#projects"
+        class="mt-16 inline-flex rounded-full border border-indigo-300 px-8 py-3 uppercase transition-colors hover:bg-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
+      >
+        Back to home
+      </NuxtLink>
+    </section>
+  </main>
 </template>
-<script setup>
-import { vSetnav } from '~~/directives/setNavtheme';
-import { vVisible } from "@/directives/vVisible"
-import { useWindowSize } from '@vueuse/core'
-const animate = onAnimate()
-const sanity = useSanity()
-const query = groq`*[_type == "projects"][0].projects`
-const { data, refresh } = await useAsyncData('allprojects', () => sanity.fetch(query))
-const { width, height } = useWindowSize()
-const columnWidth=computed(()=>{
-    let maxWidth=350
-    if(width.value>800) maxWidth=width.value/3
-    return maxWidth
+
+<script setup lang="ts">
+import { motion } from 'motion-v'
+import { popInBottom, revealGroup, revealViewport } from '~/utils/motion'
+
+const { data: projects, error, refresh } = await useProjectsContent()
+const site = useSiteConfig()
+const pageUrl = `${site.url}/projects`
+const description = 'A selection of web applications, platforms, and product experiences built by Wesley Ukadike.'
+const socialImage = `${site.url}/og-image.png`
+
+useSeoMeta({
+  title: 'Selected Projects',
+  description,
+  ogTitle: 'Selected Projects — Wesley Ukadike',
+  ogDescription: description,
+  ogImage: socialImage,
+  ogType: 'website',
+  ogUrl: pageUrl,
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'Selected Projects — Wesley Ukadike',
+  twitterDescription: description,
+  twitterImage: socialImage,
 })
-const masonryItems = computed(() => [' ', ...data.value, ' '])
+
+useHead({
+  link: [{ rel: 'canonical', href: pageUrl }],
+})
+
+useSchemaOrg([
+  defineWebPage({
+    name: 'Selected Projects — Wesley Ukadike',
+    description,
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Home', item: site.url },
+      { name: 'Projects', item: pageUrl },
+    ],
+  }),
+])
 </script>

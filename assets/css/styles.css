@@ -2,79 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-    .text{
-        @apply text-secondary-500 dark:text-white 
-    }
-    .h1{
-      
-    }
+@font-face {
+  font-family: 'Allrox';
+  src: url('../fonts/Allrox.otf') format('opentype');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Sen';
-    src: url('/assets/fonts/Sen-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'AeonikLight';
-    src: url('/assets/fonts/Aeonik-Light.otf') format('opentype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-  }
+  font-family: 'Aeonik';
+  src: url('../fonts/Aeonik-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
-    font-family: 'Aeonik';
-    src: url('/assets/fonts/Aeonik-Regular.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'AeonikBold';
-    src: url('/assets/fonts/Aeonik-Bold.otf') format('opentype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
+  font-family: 'Aeonik';
+  src: url('../fonts/Aeonik-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
-  .fullH{
-    min-height: 100vh;            /* fall-back */
-  min-height: -moz-available;
-  min-height: -webkit-fill-available;
-  min-height: stretch;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; 
+:root {
+  color-scheme: dark;
+  font-family: 'Aeonik', system-ui, sans-serif;
+  background: #000;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: #000;
+}
+
+button,
+a,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fullH {
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
+}
+
+.noisebg {
+  background:
+    radial-gradient(circle at 25% 25%, rgb(255 255 255 / 10%) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgb(255 255 255 / 5%) 1px, transparent 1px);
+  background-color: #000;
+  background-size: 4px 4px;
+}
+
+.menu-open {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .fullH::-webkit-scrollbar {
-    display: none;
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 
-  html{
-    scroll-behavior: smooth;
-    min-height: 100vh;            /* fall-back */
-  min-height: -moz-available;
-  min-height: -webkit-fill-available;
-  min-height: stretch;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; 
+  [data-motion-item],
+  [data-motion-item] *,
+  [data-motion-card],
+  [data-motion-card] *,
+  [data-motion-section] > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
-  body{
-    min-height: 100vh;            /* fall-back */
-  min-height: -moz-available;
-  min-height: -webkit-fill-available;
-  min-height: stretch;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; 
-  }
-
-  body::-webkit-scrollbar {
-    display: none;
-  }
-  html::-webkit-scrollbar {
-    display: none;
-  }
+}

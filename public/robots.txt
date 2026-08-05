@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /preview/
+
+Sitemap: https://wesleyukadike.dev/sitemap.xml

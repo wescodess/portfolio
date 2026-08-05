@@ -1,35 +1,43 @@
 <template>
-    <div class="">
-        <label :for="name" class="block text-sm font-medium text-gray-300 mb-2">{{ label }}</label>
-        <div
-            class="flex mt-2 bg-white items-center p-4 rounded-md shadow-[0px_4px_10px_rgba(0,0,0,0.08)] text-black">
-            <textarea
-                :id="name"
-                required
-                :name="name"
-                :aria-label="label"
-                :aria-describedby="name + '-description'"
-                :style="{ 'outline': 'none' }"
-                :value="modelValue"
-                @input="$emit('update:modelValue', $event.target.value)"
-                :type="type"
-                rows="4"
-                class="placeholder:text-gray-500 placeholder:font-sans focus:border-2 focus:border-indigo-500 focus-within:border-2 focus-within:border-indigo-500 focus:outline-0 w-full transition-colors resize-none"
-                :aria-required="required" />
-        </div>
-        <p :id="name + '-description'" class="sr-only">Enter your {{ label.toLowerCase() }}</p>
-</div>
+  <div>
+    <label :for="inputId" class="mb-2 block text-sm font-medium text-white">
+      {{ label }}
+    </label>
+    <textarea
+      :id="inputId"
+      v-model="model"
+      :name="name"
+      :required="required"
+      :maxlength="maxlength"
+      :rows="rows"
+      :aria-describedby="description ? descriptionId : undefined"
+      class="w-full rounded-md border border-slate-600 bg-slate-950 px-4 py-3 text-white outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-300/30"
+    />
+    <p v-if="description" :id="descriptionId" class="mt-2 text-xs text-slate-400">
+      {{ description }}
+    </p>
+  </div>
 </template>
-<script setup>
-const props = defineProps({
-    'modelValue': String || Array || Number || Object,
-    label: String,
-    name: String,
-    required:Boolean,
-    type: {
-        type: String,
-        default: 'text'
-    }
-})
-defineEmits(['update:modelValue'])
+
+<script setup lang="ts">
+const model = defineModel<string>({ required: true })
+const inputId = useId()
+
+const {
+  description = '',
+  label,
+  maxlength = undefined,
+  name,
+  required = false,
+  rows = 6,
+} = defineProps<{
+  description?: string
+  label: string
+  maxlength?: number
+  name: string
+  required?: boolean
+  rows?: number
+}>()
+
+const descriptionId = `${inputId}-description`
 </script>

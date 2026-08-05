@@ -1,105 +1,72 @@
-import { ref } from "vue";
-
-function createUUID(): string {
-  let dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-    /[xy]/g,
-    function (c) {
-      var r = (dt + Math.random() * 16) % 16 | 0;
-      dt = Math.floor(dt / 16);
-      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-    }
-  );
-  return uuid;
-}
+export type NotificationType = 'error' | 'info' | 'success' | 'warning'
 
 export interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  autoClose: boolean;
-  duration: number;
+  autoClose: boolean
+  duration: number
+  id: string
+  message: string
+  title: string
+  type: NotificationType
 }
 
-export type CreateNotification = {
-  (options: {
-    type?: string;
-    title?: string;
-    message?: string;
-    autoClose?: boolean;
-    duration?: number;
-  }): void;
-};
+export interface CreateNotificationOptions {
+  autoClose?: boolean
+  duration?: number
+  message?: string
+  title?: string
+  type?: NotificationType
+}
 
-const defaultNotificationOptions = {
-  type: "info",
-  title: "Info Notification",
-  message: "Ooops! A message was not provided",
+const defaults: Omit<Notification, 'id'> = {
   autoClose: true,
   duration: 5,
-};
+  message: 'A notification was received.',
+  title: 'Notification',
+  type: 'info',
+}
+
+function notificationId(): string {
+  return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.round(Math.random() * 1_000_000)}`
+}
 
 export default function useNotifications() {
-    const notifications=useNoti()
-  const createNotification: CreateNotification = (options) => {
-    const _options = Object.assign({ ...defaultNotificationOptions }, options);
-    notifications.value.push(
-        ...[
-            {
-                id: createUUID(),
-                ..._options,
-            },
-        ]
-        );
-        
-  };
+  const notifications = useNoti()
 
-  const createErrorNotification: CreateNotification = (options) => {
+  function createNotification(options: CreateNotificationOptions = {}): void {
+    notifications.value.push({
+      ...defaults,
+      ...options,
+      id: notificationId(),
+    })
+  }
+
+  function createErrorNotification(options: CreateNotificationOptions = {}): void {
     createNotification({
-      type: "error",
-      title: "Yikes. Something went wrong.",
+      title: 'Something went wrong',
       duration: 8,
       ...options,
-    });
-  };
+      type: 'error',
+    })
+  }
 
-  const createSuccessNotification: CreateNotification = (options) => {
-    createNotification({ type: "success", title: "Success!", ...options });
-  };
+  function createSuccessNotification(options: CreateNotificationOptions = {}): void {
+    createNotification({ title: 'Success', ...options, type: 'success' })
+  }
 
-  const createWarningNotification: CreateNotification = (options) => {
-    createNotification({
-      type: "warning",
-      title: "Something to lookout for.",
-      duration: 8,
-      ...options,
-    });
-  };
+  function createWarningNotification(options: CreateNotificationOptions = {}): void {
+    createNotification({ title: 'Please note', duration: 8, ...options, type: 'warning' })
+  }
 
-  const removeNotifications = (id: string) => {
-    const index = notifications.value.findIndex((item) => item.id === id);
-    if (index !== -1) notifications.value.splice(index, 1);
-  };
-
-  const stopBodyOverflow = () => {
-    if (typeof document === "undefined") return;
-    document.body.classList.add("hide-overflow");
-  };
-
-  const allowBodyOverflow = () => {
-    if (typeof document === "undefined") return;
-    document.body.classList.remove("hide-overflow");
-  };
+  function removeNotifications(id: string): void {
+    notifications.value = notifications.value.filter(notification => notification.id !== id)
+  }
 
   return {
-    notifications,
+    notifications: readonly(notifications),
     createNotification,
     createSuccessNotification,
     createErrorNotification,
     createWarningNotification,
     removeNotifications,
-    stopBodyOverflow,
-    allowBodyOverflow,
-  };
+  }
 }

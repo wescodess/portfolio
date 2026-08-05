@@ -1,29 +1,54 @@
 <template>
-    <div
+  <section
     id="experience"
-        class="experience py-32 px-4 md:px-16 xl:px-40 relative z-10  text-white grid gap-8 lg:gap-0 grid-cols-1 lg:grid-cols-2">
-        <div>
-            <h4 v-visible="animate.popInBottom" class=" text-sm text-slate-400">EXPERIENCE</h4>
-            <h1 v-visible="animate.popInBottom" :initial="{ 'transition-delay': '.3s' }"
-                class="text-5xl my-4 font-allrox font-bold max-w-md">{{ data.experience_title }}</h1>
-            <h6 v-visible="animate.popInBottom" :initial="{ 'transition-delay': '.6s' }"
-                class=" text-xs text-slate-400 font-allrox font-light">{{ data.experience_subtitle }}</h6>
-        </div>
-        <div>
-            <SharedExperience v-visible="animate.popInBottom" :initial="{ 'transition-delay': `.${index * 2}s` }"
-                v-for="(experience, index) in data.experiences" :is-last="index >= data.experiences.length - 1"
-                :key="experience.company" :experience="experience" :class="['mt-6 md:mt-10']" />
-        </div>
-    </div>
-</template>
-<script setup>
-import { ref } from 'vue'
-import { vVisible } from "@/directives/vVisible"
-const animate = onAnimate()
-const sanity = useSanity()
-const query = groq`*[_type == "experience"][0]`
-const { data, refresh } = await useAsyncData('experience', () => sanity.fetch(query))
-</script>
-<style>
+    class="relative z-10 grid grid-cols-1 gap-10 px-4 py-32 text-white md:px-16 lg:grid-cols-2 xl:px-40"
+    aria-labelledby="experience-heading"
+  >
+    <motion.div
+      data-motion-section="experience-copy"
+      :variants="revealGroup"
+      initial="hidden"
+      while-in-view="visible"
+      :in-view-options="revealViewport"
+    >
+      <motion.p :variants="popInBottom" class="text-sm uppercase tracking-widest text-slate-400">
+        Experience
+      </motion.p>
+      <motion.h2 id="experience-heading" :variants="popInBottom" class="my-4 max-w-md text-5xl font-bold">
+        {{ experience.title }}
+      </motion.h2>
+      <motion.p :variants="popInBottom" class="max-w-md text-sm leading-relaxed text-slate-400">
+        {{ experience.subtitle }}
+      </motion.p>
+    </motion.div>
 
-</style>
+    <motion.div
+      data-motion-section="experience-list"
+      :variants="revealGroup"
+      initial="hidden"
+      while-in-view="visible"
+      :in-view-options="revealViewport"
+    >
+      <motion.div
+        v-for="(item, index) in experience.experiences"
+        :key="item._key"
+        :variants="popInBottom"
+        class="mt-6 first:mt-0 md:mt-10"
+      >
+        <SharedExperience
+          :experience="item"
+          :is-last="index === experience.experiences.length - 1"
+        />
+      </motion.div>
+    </motion.div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { motion } from 'motion-v'
+import type { ExperienceContent } from '~/types/portfolio'
+import { popInBottom, revealGroup, revealViewport } from '~/utils/motion'
+
+defineProps<{ experience: ExperienceContent }>()
+
+</script>

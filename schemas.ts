@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { Rule } from 'sanity'
 // This file contains the schema definitions for your Sanity CMS
 
 export const schemaTypes = [
@@ -12,6 +12,7 @@ export const schemaTypes = [
         name: 'projects',
         title: 'Projects',
         type: 'array',
+        validation: (Rule: Rule) => Rule.required().min(1).unique(),
         of: [
           {
             type: 'object',
@@ -21,13 +22,21 @@ export const schemaTypes = [
                 name: 'title',
                 title: 'Title',
                 type: 'string',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'decs',
+                title: 'Legacy description',
+                type: 'text',
+                deprecated: {
+                  reason: 'Use the Description field. This field remains for existing content.'
+                }
+              },
+              {
+                name: 'description',
                 title: 'Description',
                 type: 'text',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.max(600)
               },
               {
                 name: 'image',
@@ -36,7 +45,7 @@ export const schemaTypes = [
                 options: {
                   hotspot: true
                 },
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'url',
@@ -66,18 +75,19 @@ export const schemaTypes = [
         name: 'experience_title',
         title: 'Experience Title',
         type: 'string',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'experience_subtitle',
         title: 'Experience Subtitle',
         type: 'text',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'experiences',
         title: 'Work Experiences',
         type: 'array',
+        validation: (Rule: Rule) => Rule.required().min(1).unique(),
         of: [
           {
             type: 'object',
@@ -87,13 +97,13 @@ export const schemaTypes = [
                 name: 'role',
                 title: 'Role/Position',
                 type: 'string',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'company',
                 title: 'Company',
                 type: 'string',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'logo',
@@ -102,20 +112,19 @@ export const schemaTypes = [
                 options: {
                   hotspot: true
                 },
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'start',
                 title: 'Start Date',
                 type: 'string',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'end',
                 title: 'End Date',
                 type: 'string',
-                description: 'Leave empty if current position',
-                validation: Rule => Rule.required()
+                description: 'Leave empty if this is the current position'
               }
             ]
           }
@@ -134,6 +143,7 @@ export const schemaTypes = [
         name: 'frameworks',
         title: 'Frameworks',
         type: 'array',
+        validation: (Rule: Rule) => Rule.required().min(1).unique(),
         of: [
           {
             type: 'object',
@@ -143,7 +153,7 @@ export const schemaTypes = [
                 name: 'title',
                 title: 'Name',
                 type: 'string',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'icon',
@@ -152,7 +162,7 @@ export const schemaTypes = [
                 options: {
                   hotspot: true
                 },
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               }
             ]
           }
@@ -171,13 +181,13 @@ export const schemaTypes = [
         name: 'title',
         title: 'Main Title',
         type: 'string',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'subtitle',
         title: 'Subtitle',
         type: 'text',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'image',
@@ -186,7 +196,7 @@ export const schemaTypes = [
         options: {
           hotspot: true
         },
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       }
     ]
   },
@@ -201,7 +211,7 @@ export const schemaTypes = [
         name: 'banner_title',
         title: 'Banner Title',
         type: 'string',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'banner_image',
@@ -210,7 +220,7 @@ export const schemaTypes = [
         options: {
           hotspot: true
         },
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       }
     ]
   },
@@ -225,18 +235,19 @@ export const schemaTypes = [
         name: 'title',
         title: 'Main Title',
         type: 'string',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'subtitle',
         title: 'Subtitle',
         type: 'text',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'skills',
         title: 'Skills',
         type: 'array',
+        validation: (Rule: Rule) => Rule.required().min(1).unique(),
         of: [
           {
             type: 'object',
@@ -246,13 +257,13 @@ export const schemaTypes = [
                 name: 'title',
                 title: 'Skill Name',
                 type: 'string',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'desc',
                 title: 'Description',
                 type: 'text',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'icon',
@@ -261,7 +272,7 @@ export const schemaTypes = [
                 options: {
                   hotspot: true
                 },
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               }
             ]
           }
@@ -280,13 +291,13 @@ export const schemaTypes = [
         name: 'philosophy_title',
         title: 'Philosophy Title',
         type: 'string',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'philosophy_subtitle',
         title: 'Philosophy Subtitle',
         type: 'text',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'image',
@@ -295,7 +306,7 @@ export const schemaTypes = [
         options: {
           hotspot: true
         },
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       }
     ]
   },
@@ -310,13 +321,13 @@ export const schemaTypes = [
         name: 'title',
         title: 'Footer Title',
         type: 'string',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'subtitle',
         title: 'Footer Subtitle',
         type: 'text',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'banner_image',
@@ -325,35 +336,43 @@ export const schemaTypes = [
         options: {
           hotspot: true
         },
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'cv',
         title: 'CV File',
         type: 'file',
-        validation: Rule => Rule.required()
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'socials',
         title: 'Social Media Links',
         type: 'array',
+        validation: (Rule: Rule) => Rule.required().min(1).unique(),
         of: [
           {
             type: 'object',
             name: 'social',
             fields: [
               {
+                name: 'label',
+                title: 'Accessible label',
+                type: 'string',
+                description: 'For example: GitHub or LinkedIn',
+                validation: (Rule: Rule) => Rule.required().min(2).max(50)
+              },
+              {
                 name: 'icon',
                 title: 'Icon Name',
                 type: 'string',
                 description: 'e.g., "mdi:github", "mdi:linkedin"',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               },
               {
                 name: 'link',
                 title: 'Social Link',
                 type: 'url',
-                validation: Rule => Rule.required()
+                validation: (Rule: Rule) => Rule.required()
               }
             ]
           }

@@ -1,96 +1,56 @@
 <template>
-    <div :style="{backgroundColor:toastColor, transitionDuration:duration}" :class="[`toast-notification relative py-4 px-4 md:px-6 rounded-md max-w-[350px] md:max-w-max`]" 
-        @click.prevent="close" :ref="id">
-        <div @click="close" class=" cursor-pointer text-white absolute right-2 top-1" title="Close">
-            
-        </div>
-
-        <div :class="[`text-white flex gap-4 items-center`]">
-            <Icon size="28" :name="toastIcon"/>
-            <div class=" w-px h-full min-h-[48px]  bg-white"></div>
-            <div class="content">
-                <div class="content__title text-base">{{ toastTitle }}</div>
-
-                <p class="content__message text-xs">{{ message }}</p>
-            </div>
-            <Icon size="28" name="uil:times" class=" cursor-pointer" />
-        </div>
-        <div v-if="autoClose" class="progress"></div>
-    </div>
+  <div
+    :class="['relative max-w-sm rounded-md border px-5 py-4 pr-12 text-white shadow-xl', toastClass]"
+    :role="type === 'error' ? 'alert' : 'status'"
+  >
+    <p class="font-semibold">{{ title }}</p>
+    <p class="mt-1 text-sm">{{ message }}</p>
+    <button
+      type="button"
+      class="absolute right-2 top-2 flex min-h-9 min-w-9 items-center justify-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+      aria-label="Dismiss notification"
+      @click="close"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
 </template>
+
 <script setup lang="ts">
-const props = defineProps({
-    id: { type: String, required: true },
-    type: {
-        type: String,
-        default: "info",
-        required: false,
-    },
-    title: { type: String, default: null, required: false },
-    message: {
-        type: String,
-        default: "Ooops! A message was not provided.",
-        required: false,
-    },
-    autoClose: { type: Boolean, default: true, required: false },
-    duration: { type: Number, default: 5, required: false },
-});
-// Defining emits
-// for closing a notification
-const emit = defineEmits<{
-    (e: "close"): void;
-}>();
-// some reactive values to manage the notification
-const timer = ref<NodeJS.Timeout>();
-const startedAt = ref<number>(0);
-const delay = ref<number>(0);
-// setting up the automatic
-// dismissing of notificaton
-// after the specified duration
+import type { NotificationType } from '~/composables/useToast'
+
+const props = withDefaults(defineProps<{
+  autoClose?: boolean
+  duration?: number
+  message: string
+  title: string
+  type?: NotificationType
+}>(), {
+  autoClose: true,
+  duration: 5,
+  type: 'info',
+})
+
+const emit = defineEmits<{ close: [] }>()
+let timer: ReturnType<typeof setTimeout> | undefined
+
+const toastClass = computed(() => ({
+  error: 'border-red-300 bg-red-700',
+  warning: 'border-amber-200 bg-amber-700',
+  success: 'border-emerald-200 bg-emerald-700',
+  info: 'border-blue-200 bg-blue-700',
+})[props.type])
+
+function close() {
+  if (timer) clearTimeout(timer)
+  emit('close')
+}
+
 onMounted(() => {
-    if (props.autoClose) {
-        startedAt.value = Date.now();
-        delay.value = props.duration * 1000;
-        timer.value = setTimeout(close, delay.value);
-    }
-});
-// a computed property to set
-// the icon for the notification
-const toastIcon = computed(() => {
-    switch (props.type) {
-        case "error":
-            return "mi:circle-error";
-        case "warning":
-            return "mdi:warning-circle-outline";
-        case "success":
-            return "mdi:success-circle-outline";
-        default:
-            return "mdi:information-outline";
-    }
-});
-// a computed property to set
-// the icon and progres bar color
-// for the notification
-const toastColor = computed(() => {
-    switch (props.type) {
-        case "error":
-            return "#ff355b";
-        case "warning":
-            return "#e8b910";
-        case "success":
-            return "#00cc69";
-        default:
-            return "#0067ff";
-    }
-});
-// a computed property to set
-// the title of the notification
-const toastTitle = computed(() => {
-    return props.title && props.title !== null ? props.title : "Notification";
-});
-// a method to close the
-// notification and emit the action
-const close = () => {
-    emit("close");
-};
+  if (props.autoClose) timer = setTimeout(close, props.duration * 1000)
+})
+
+onBeforeUnmount(() => {
+  if (timer) clearTimeout(timer)
+})
 </script>

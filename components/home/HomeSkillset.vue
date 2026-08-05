@@ -1,31 +1,57 @@
 <template>
-    <div class="text-white relative z-10 py-14 md:py-32 px-4 md:px-16 xl:px-40 grid grid-cols-1 lg:grid-cols-2">
-        <div>
-            <h4 v-visible="animate.popInBottom" class=" text-5xl mb-4 font-allrox font-bold">{{data.title}}</h4>
-            <p v-visible="animate.popInBottom" :initial="{ 'transition-delay': '.3s' }"
-                class=" text-sm text-slate-400 font-allrox font-light max-w-xs leading-relaxed">{{data.subtitle}}
-            </p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 lg:mt-0 ">
-            <template v-for="(skill, index) in data.skills" :key="skill.icon">
-                <div class=" w-full">
-                    <div v-visible="animate.popInBottom" :initial="{ 'transition-delay': `.${index * 2}s` }">
-                        <img class="w-20 h-20" :src="$urlFor(skill.icon).url()" alt="logo">
-                        <h4 class="text-lg my-2">{{skill.title}}</h4>
-                        <p class=" text-sm text-slate-400 leading-relaxed font-allrox font-light">{{ skill.desc}}</p>
-                    </div>
+  <section
+    class="relative z-10 grid grid-cols-1 px-4 py-14 text-white md:px-16 md:py-32 lg:grid-cols-2 xl:px-40"
+    aria-labelledby="skillset-heading"
+  >
+    <motion.div
+      data-motion-section="skillset-copy"
+      :variants="revealGroup"
+      initial="hidden"
+      while-in-view="visible"
+      :in-view-options="revealViewport"
+    >
+      <motion.h2 id="skillset-heading" :variants="popInBottom" class="mb-4 text-5xl font-bold">
+        {{ skillset.title }}
+      </motion.h2>
+      <motion.p :variants="popInBottom" class="max-w-sm text-sm font-light leading-relaxed text-slate-400">
+        {{ skillset.subtitle }}
+      </motion.p>
+    </motion.div>
 
-                </div>
-                <hr v-if="(index + 1) % 2 === 0 && index < data.skills.length - 1"
-                    class=" col-span-2 bg-white w-full hidden md:block   my-12" />
-            </template>
-        </div>
-    </div>
+    <motion.div
+      data-motion-section="skillset-list"
+      :variants="revealGroup"
+      initial="hidden"
+      while-in-view="visible"
+      :in-view-options="revealViewport"
+      class="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:mt-0"
+    >
+      <motion.article v-for="skill in skillset.skills" :key="skill._key" :variants="popInBottom">
+        <NuxtImg
+          v-if="iconUrl(skill.icon)"
+          class="h-20 w-20 object-contain"
+          :src="iconUrl(skill.icon)"
+          alt=""
+          width="80"
+          height="80"
+          loading="lazy"
+        />
+        <h3 class="my-2 text-lg">{{ skill.title }}</h3>
+        <p class="text-sm font-light leading-relaxed text-slate-400">{{ skill.description }}</p>
+      </motion.article>
+    </motion.div>
+  </section>
 </template>
-<script setup>
-import { vVisible } from "@/directives/vVisible"
-const animate = onAnimate()
-const sanity = useSanity()
-const query = groq`*[_type == "skillset"][0]`
-const { data, refresh } = await useAsyncData('skillset', () => sanity.fetch(query))
+
+<script setup lang="ts">
+import { motion } from 'motion-v'
+import type { SanityImage, SkillsetContent } from '~/types/portfolio'
+import { popInBottom, revealGroup, revealViewport } from '~/utils/motion'
+
+defineProps<{ skillset: SkillsetContent }>()
+
+
+function iconUrl(image: SanityImage | null): string {
+  return sanityImage(image)?.width(160).height(160).url() || ''
+}
 </script>
