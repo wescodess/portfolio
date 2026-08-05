@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-root noisebg">
+  <div class="layout-root noisebg ">
     <NuxtLoadingIndicator color="#8a4af3" :height="5" />
 
     <transition name="loader-fade">
@@ -58,7 +58,7 @@ let hideLoaderTimer: number | undefined
 
 const containerClass = computed(() => [
   'layout-main',
-  showInitialLoader.value ? 'layout-main--hidden' : 'layout-main--visible',
+  showInitialLoader.value ? 'layout-main--hidden' : null,
 ])
 
 onNuxtReady(() => {
@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
   min-height: 100vh;
   width: 100vw;
   color: #fff;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .layout-main {
@@ -96,11 +96,6 @@ onBeforeUnmount(() => {
   opacity: 0;
   transform: translateY(12px);
   pointer-events: none;
-}
-
-.layout-main--visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .loader-overlay {
