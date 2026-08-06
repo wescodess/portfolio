@@ -1,105 +1,204 @@
 <template>
-    <nav ref="mainNav"
-        :class="['sticky top-0 py-2 xl:py-4 !leading-tight transition-[background-color] flex text-white duration-500 text-sm px-4 md:px-16 xl:px-40', { '  border-t border-b border-grey-700': top >= 1 }, { ' bg-white/10 border-0 backdrop-blur  shadow-xs shadow-white ': top < 1 }, { 'bg-black/40': !dark && top < 1 }]">
-        <div class="nav-right flex items-center">
+  <header class="sticky top-0 z-40 flex w-full justify-center">
+    <nav
+      aria-label="Primary navigation"
+      :data-nav-state="isStuck ? 'menu' : 'details'"
+      :class="[
+        'nav-shell relative flex w-full items-center overflow-hidden text-sm text-white',
+        isStuck
+          ? 'border-b border-white/15 bg-black/80 px-4 py-2 shadow-lg shadow-black/30 backdrop-blur-xl md:px-16 xl:px-40'
+          : 'border-y border-grey-700 bg-black/40 px-4 py-3 md:px-16 xl:px-40',
+      ]"
+    >
+      <NuxtLink
+        to="/"
+        class="flex items-center rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
+        aria-label="Wesley Ukadike, home"
+      >
+        <NuxtImg
+          class="mr-2 h-10 w-10 transition-transform duration-500 motion-safe:hover:rotate-[360deg]"
+          src="/images/winkbit.png"
+          alt=""
+          width="40"
+          height="40"
+          loading="eager"
+        />
+        <span class="font-bold leading-tight">
+          WESLEY<br >UKADIKE
+        </span>
+      </NuxtLink>
 
-            <img class=" w-10 mr-2 hover:rotate-[360deg] duration-500 transition-all" src="../../assets/imgs/winkbit.png" alt="logo">
-
-            <NuxtLink to="/">
-                <h4 class=" font-allrox font-bold">WESLEY <br /> UKADIKE</h4>
-            </NuxtLink>
-
+      <Transition name="nav-swap" mode="out-in">
+        <div
+          v-if="!isStuck"
+          key="details"
+          data-nav-panel="details"
+          class="ml-auto hidden items-center text-[0.7rem] uppercase leading-tight tracking-[0.12em] text-slate-300 lg:flex"
+        >
+          <p>
+            Based in Ontario<br >
+            <span class="text-white">Canada, CA</span>
+          </p>
+          <p class="ml-12 border-l border-white/15 pl-12">
+            Currently Lead Software Engineer<br >
+            <span class="text-white">FalconAero</span>
+          </p>
+          <button
+            type="button"
+            class="ml-10 flex min-h-11 min-w-11 items-center justify-center rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300"
+            aria-controls="mobile-navigation"
+            :aria-expanded="showSideNav"
+            aria-label="Open navigation menu"
+            @click="openSideNav"
+          >
+            <span class="menu-mark" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
         </div>
-        <template class=" hidden lg:flex ml-auto items-center font-extralight  font-allrox">
-            <transition name="slide-fade" mode="out-in">
-                <div key="detRef" ref="detRef" v-if="opacity > 0.0051 && !showMenu"
-                    class="nav-description ml-auto flex items-center">
-                    <h4>BASED IN ONTARIO <br /> CANADA, CA</h4>
-                    <h4 class="mx-8 md:ml-12 md:mr-24">CURRENTLY LEAD SOFTWARE ENGINEER <br /> FALCONAERO</h4>
-                    <div v-element-hover="onHover" class="py-2 px-6 cursor-pointer">
-                        <nuxt-icon v-element-hover="onHover" icon="menu" class=" cursor-pointer w-6 h-max text-white" />
-                    </div>
 
-                </div>
-                <div v-element-hover="onHover" key="menuRef" ref="menuRef" v-else
-                    class="nav-main ml-auto flex items-center">
-                    <ul>
-                        <NuxtLink to="/#about" class=" hover:text-indigo-300">ABOUT</NuxtLink>
-                        <NuxtLink class="mx-8 md:mx-12 hover:text-indigo-300" to="/#projects">WORKS</NuxtLink>
-                        <NuxtLink to="/#experience" class="hover:text-indigo-300">EXPERIENCE</NuxtLink>
-                    </ul>
-                    <NuxtLink to="/#footer">
-                        <button
-                            class=" ml-8 md:ml-12 px-8 py-3 rounded-full bg-white ring ring-white  text-gray-800 hover:bg-transparent hover:text-white">Get
-                            in touch</button>
-                    </NuxtLink>
-                </div>
-            </transition>
-        </template>
-        <div class="py-2 px-6 cursor-pointer flex items-center lg:hidden ml-auto ">
-            <nuxt-icon @click="toggleSideNav" icon="menu" class=" cursor-pointer w-6 h-max" />
+        <div
+          v-else
+          key="menu"
+          data-nav-panel="menu"
+          class="ml-auto hidden items-center gap-6 lg:flex"
+        >
+          <ul class="flex items-center gap-6" role="list">
+            <li><NuxtLink class="nav-link" to="/#about">About</NuxtLink></li>
+            <li><NuxtLink class="nav-link" to="/#projects">Work</NuxtLink></li>
+            <li><NuxtLink class="nav-link" to="/#experience">Experience</NuxtLink></li>
+          </ul>
+          <NuxtLink
+            to="/#footer"
+            class="rounded-full bg-white px-6 py-2.5 text-gray-800 ring-1 ring-white transition-[background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:bg-transparent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
+          >
+            Get in touch
+          </NuxtLink>
         </div>
+      </Transition>
+
+      <button
+        ref="mobileMenuButton"
+        type="button"
+        class="ml-auto flex min-h-11 min-w-11 items-center justify-center rounded-md lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300"
+        aria-controls="mobile-navigation"
+        :aria-expanded="showSideNav"
+        aria-label="Open navigation menu"
+        @click="openSideNav"
+      >
+        <span class="menu-mark" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+
     </nav>
+  </header>
 </template>
 
-<script  setup lang="ts">
-import { defineProps, withDefaults, ref } from 'vue'
-import { vElementHover } from '@vueuse/components'
+<script setup lang="ts">
+import { useWindowScroll } from '@vueuse/core'
 
-const props = withDefaults(defineProps<{
-    opacity: number,
-    top: number
-}>(), {
-    opacity: 1,
-    top: 0
-})
-const dark = useDark()
-const detRef = ref(null)
-const menuRef = ref(null)
-const showMenu = ref(false)
+const { top = 1 } = defineProps<{ top?: number }>()
+const route = useRoute()
 const showSideNav = useSideNav()
+const mobileMenuButton = useTemplateRef<HTMLButtonElement>('mobileMenuButton')
+const activeMenuTrigger = shallowRef<HTMLButtonElement | null>(null)
+const { y: windowY } = useWindowScroll()
+const isStuck = computed(() => route.path !== '/' || (windowY.value > 0 && top <= 0))
 
-useHead(() => ({
-    bodyAttrs: {
-        class: showSideNav.value ? 'menu-open' : undefined
-    }
-}))
-
-
-
-const onHover = (state) => {
-    if (state) {
-        return showMenu.value = true
-    }
-    return showMenu.value = false
+function openSideNav(event: MouseEvent) {
+  activeMenuTrigger.value = event.currentTarget instanceof HTMLButtonElement
+    ? event.currentTarget
+    : mobileMenuButton.value
+  showSideNav.value = true
 }
 
-const toggleSideNav = () => {
-    showSideNav.value = !showSideNav.value
-}
+watch(showSideNav, (isOpen) => {
+  if (!isOpen) nextTick(() => activeMenuTrigger.value?.focus())
+})
 </script>
+
 <style scoped>
-/* .sticky-nav{
-    background-image: url('../../assets/imgs/noisebg.png');
-    background-size: contain;
-} */
-
-.rot
-
-.slide-fade-enter-active {
-    transition: all 0.3s ease-out;
-
+.nav-shell {
+  min-height: 4rem;
+  will-change: background-color;
+  transition:
+    background-color 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    padding 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.slide-fade-leave-active {
-
-    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+.nav-swap-enter-active,
+.nav-swap-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-    transform: translateX(-20px);
+.nav-swap-enter-from {
+  opacity: 0;
+  transform: translateX(1rem);
+}
 
-    opacity: 0;
+.nav-swap-leave-to {
+  opacity: 0;
+  transform: translateX(-1rem);
+}
+
+.nav-link {
+  position: relative;
+  border-radius: 0.125rem;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.35rem;
+  left: 0;
+  height: 1px;
+  content: '';
+  background: #a5b4fc;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link:hover {
+  color: #a5b4fc;
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid #a5b4fc;
+  outline-offset: 4px;
+}
+
+.menu-mark {
+  display: grid;
+  width: 1.5rem;
+  gap: 0.3rem;
+}
+
+.menu-mark span {
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.menu-mark span:nth-child(2) {
+  width: 75%;
+  margin-left: auto;
 }
 </style>

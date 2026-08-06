@@ -1,54 +1,44 @@
 <template>
-    <transition-group name="toast-notification" tag="div" class="toast-notifications fixed top-20 right-4 md:right-12" @before-enter="stopBodyOverflow"
-        @after-enter="allowBodyOverflow" @before-leave="stopBodyOverflow" @after-leave="allowBodyOverflow">
-        <toast v-for="(item, idx) in noti" :key="item.id" :id="item.id" :type="item.type" :title="item.title"
-            :message="item.message" :auto-close="item.autoClose" :duration="item.duration" @close="
-                () => {
-                    removeNotifications(item.id);
-                }
-            ">
-        </toast>
-    </transition-group>
+  <TransitionGroup
+    name="toast-notification"
+    tag="div"
+    class="fixed right-4 top-20 z-[100] flex flex-col-reverse gap-3 md:right-12"
+    aria-label="Notifications"
+    aria-live="polite"
+  >
+    <Toast
+      v-for="item in notifications"
+      :key="item.id"
+      :type="item.type"
+      :title="item.title"
+      :message="item.message"
+      :auto-close="item.autoClose"
+      :duration="item.duration"
+      @close="removeNotifications(item.id)"
+    />
+  </TransitionGroup>
 </template>
+
 <script setup lang="ts">
-const {
-    notifications,
-    createNotification,
-    removeNotifications,
-    stopBodyOverflow,
-    allowBodyOverflow,
-} = useToast();
-const noti=useNoti()
-watchEffect(()=>{
-    
-})
+const { notifications, removeNotifications } = useToast()
 </script>
-<style>
-.toast-notifications {
-    z-index: 100;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0.8rem;
-    
-}
 
-.toast-notification-enter-active {
-    animation: toast-fade-in 0.5s ease-in-out;
-}
-
+<style scoped>
+.toast-notification-enter-active,
 .toast-notification-leave-active {
-    animation: toast-fade-in 0.5s ease-in-out reverse;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-@keyframes toast-fade-in {
-    from {
-        opacity: 0;
-        transform: scale(0.4);
-    }
+.toast-notification-enter-from,
+.toast-notification-leave-to {
+  opacity: 0;
+  transform: translateY(-0.75rem);
+}
 
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+@media (prefers-reduced-motion: reduce) {
+  .toast-notification-enter-active,
+  .toast-notification-leave-active {
+    transition: none;
+  }
 }
 </style>
