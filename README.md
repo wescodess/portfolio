@@ -2,6 +2,8 @@
 
 A production-oriented Nuxt 3 portfolio backed by Sanity. The application is server-rendered and prerenders its public routes, optimizes local and Sanity images, exposes a server-protected contact flow, and includes automated quality, security, accessibility, and browser gates.
 
+[View the live portfolio](https://personal-kaypappi.vercel.app)
+
 ## Requirements
 
 - Node.js 22–24
@@ -76,3 +78,5 @@ For rollback, retain the previous immutable build artifact and environment revis
 ## Security ownership
 
 Production credential rotation, branch protection, required checks, and monitoring-provider access are owner-managed operations. Automated dependency updates and CI secret scanning are committed under `.github/`.
+
+Report suspected vulnerabilities through the private process in [`SECURITY.md`](SECURITY.md), never through a public issue.
