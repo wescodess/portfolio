@@ -9,11 +9,14 @@
       class="mb-14 max-w-3xl"
     >
       <motion.p :variants="popInBottom" class="text-sm uppercase tracking-widest text-slate-400">
-        My projects
+        Selected engineering work
       </motion.p>
       <motion.h2 id="home-projects-heading" :variants="popInBottom" class="mt-3 text-5xl font-bold leading-tight">
-        Work I’ve done over the years
+        Products built for real-world complexity
       </motion.h2>
+      <motion.p :variants="popInBottom" class="mt-5 max-w-2xl leading-relaxed text-slate-300">
+        A focused selection of systems where I owned consequential frontend, full-stack, and product decisions.
+      </motion.p>
     </motion.div>
 
     <motion.div
@@ -23,7 +26,7 @@
       initial="hidden"
       while-in-view="visible"
       :in-view-options="revealViewport"
-      class="grid grid-cols-1 gap-10 lg:grid-cols-2"
+      class="grid grid-cols-1 gap-10 lg:grid-cols-3"
     >
       <motion.div
         v-for="project in projects"
@@ -40,7 +43,7 @@
       to="/projects"
       class="mx-auto mt-16 flex w-max rounded-full border border-indigo-300 px-8 py-3 uppercase transition-colors hover:bg-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
     >
-      View all projects
+      Explore all project work
     </NuxtLink>
   </section>
 </template>

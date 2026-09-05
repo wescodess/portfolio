@@ -25,6 +25,17 @@ test('publishes complete metadata and landmarks', async ({ page }) => {
   await expect(page.locator('script[type="application/ld+json"]')).not.toHaveCount(0)
 })
 
+test('features only the three strongest projects on the homepage', async ({ page }) => {
+  const projectCards = page.locator('[data-project-card]')
+
+  await expect(projectCards).toHaveCount(3)
+  await expect(page.getByRole('heading', { name: /^Budds/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^CharterXE/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^WACS/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^Blackcopper/ })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: /^SpacePAD/ })).toHaveCount(0)
+})
+
 test('keeps the hero fixed while content covers it, then pins navigation', async ({ page }) => {
   const hero = page.locator('.home-hero')
   const heroContent = page.locator('.home-hero__banner')
@@ -235,8 +246,20 @@ test('renders every footer social icon from a local asset', async ({ page, reque
 
 test('serves the projects route and public operational endpoints', async ({ page, request }, testInfo) => {
   await page.goto('/projects')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Work I’ve done')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Product engineering')
   await expect(page).toHaveTitle(/Selected Projects.*Wesley Ukadike/)
+  await expect(page.locator('[data-project-tier="featured"]')).toHaveCount(3)
+  await expect(page.locator('[data-project-tier="standard"]')).toHaveCount(2)
+  await expect(page.getByRole('heading', { name: /^Budds/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^CharterXE/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^WACS/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^Blackcopper/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^SpacePAD/ })).toBeVisible()
+  await expect(page.getByText('Organize QR', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('Smart Menu', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('Nonames', { exact: true })).toHaveCount(0)
+  await expect(page.locator('[data-project-card] > a')).toHaveCount(3)
+  await expect(page.locator('[data-project-card] > div')).toHaveCount(2)
 
   const health = await request.get('/healthz')
   expect(health.ok()).toBe(true)
