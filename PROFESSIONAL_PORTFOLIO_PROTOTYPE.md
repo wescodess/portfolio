@@ -30,7 +30,7 @@ This branch is a throwaway design lab. It does not change the production homepag
 ## Five directions
 
 - **A — Executive Editorial:** high-trust narrative and selective proof.
-- **B — Wesley's Product Routebook:** a warm technical-editorial system built around how real work moves through Budds, CharterXE, and WACS. It avoids dashboard theatre, coded labels, and neon AI-template styling.
+- **B — Plainspoken / Evidence-first:** a restrained, practical portfolio built from real product screenshots, specific ownership, and ordinary language.
 - **C — Case-study Immersive:** project chapters dominate the journey.
 - **D — Swiss Résumé:** rigorous recruiter scan and career progression.
 - **E — Quiet Studio:** spacious, premium, human, with restrained Bitmoji personality.
@@ -58,4 +58,22 @@ The first Product Systems draft had a useful information model but leaned on fam
 - No fake metrics, terminal decoration, architecture theatre, or framework wall.
 - One small Bitmoji signature near contact; no personal photography or hero illustration.
 
-The working point of view is: **The interface makes a promise. I build what keeps it.**
+B2's working point of view was: **The interface makes a promise. I build what keeps it.**
+It is intentionally superseded by B3 below.
+
+## B3 iteration — remove the concept
+
+B2 still felt manufactured. The routebook name, oversized manifesto, numbered chapters,
+Learn / Move / Coordinate taxonomy, and compressed slogans created a design story that sat
+between the reader and the actual work.
+
+B3 removes that layer:
+
+- A direct introduction: who Wesley is, what he does, where he is based, and what he is doing now.
+- Real project screenshots read from the existing Sanity records, with no schema or content changes.
+- Familiar headings and navigation: Work, Experience, About, LinkedIn, GitHub, and CV.
+- Every featured project states the product context, Wesley's role, and concrete engineering work.
+- A neutral visual system with modest type, simple rules, and no cards, badges, numbering, invented metrics, or thematic vocabulary.
+- One small Bitmoji in the footer as a personal signature rather than a visual concept.
+
+The work is now responsible for making the page memorable. The layout stays out of its way.

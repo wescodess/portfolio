@@ -34,7 +34,7 @@ const showSwitcher = import.meta.dev
 
 const variants = [
   { key: 'A', name: 'Executive Editorial', component: markRaw(VariantExecutiveEditorial) },
-  { key: 'B', name: 'Wesley’s Product Routebook', component: markRaw(VariantProductSystems) },
+  { key: 'B', name: 'Plainspoken / Evidence-first', component: markRaw(VariantProductSystems) },
   { key: 'C', name: 'Case-study Immersive', component: markRaw(VariantCaseStudyImmersive) },
   { key: 'D', name: 'Swiss Résumé', component: markRaw(VariantSwissResume) },
   { key: 'E', name: 'Quiet Studio', component: markRaw(VariantQuietStudio) },
