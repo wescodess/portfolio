@@ -30,7 +30,7 @@ This branch is a throwaway design lab. It does not change the production homepag
 ## Five directions
 
 - **A — Executive Editorial:** high-trust narrative and selective proof.
-- **B — Product Systems:** architecture, product surfaces, and engineering evidence.
+- **B — Wesley's Product Routebook:** a warm technical-editorial system built around how real work moves through Budds, CharterXE, and WACS. It avoids dashboard theatre, coded labels, and neon AI-template styling.
 - **C — Case-study Immersive:** project chapters dominate the journey.
 - **D — Swiss Résumé:** rigorous recruiter scan and career progression.
 - **E — Quiet Studio:** spacious, premium, human, with restrained Bitmoji personality.
@@ -47,3 +47,15 @@ Score each direction from 1–5 on:
 - Memorability: the portfolio has a recognizable point of view without feeling playful or gimmicky.
 
 The winning implementation may combine sections from multiple directions. The prototypes themselves should remain on this branch and not be promoted directly to production.
+
+## B2 iteration — make it Wesley's
+
+The first Product Systems draft had a useful information model but leaned on familiar AI-template cues: a black grid, neon green, fake status language, coded records, and dashboard-like panels. B2 keeps the systems thinking and replaces that visual vocabulary with a product routebook:
+
+- Warm technical-editorial colours: deep ink, paper, safety orange, and muted sky.
+- Plain-language routes—Learn, Move, Coordinate—drawn from Budds, CharterXE, and WACS.
+- Project narratives organized around responsibility, workflow, and consequential decisions.
+- No fake metrics, terminal decoration, architecture theatre, or framework wall.
+- One small Bitmoji signature near contact; no personal photography or hero illustration.
+
+The working point of view is: **The interface makes a promise. I build what keeps it.**
