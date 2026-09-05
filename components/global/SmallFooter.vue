@@ -36,20 +36,20 @@
 const { data: socials } = await useSocialLinks()
 
 const socialIcons: Record<string, string> = {
-  'fa-brands:github-alt': '/icons/github.svg',
-  'fa-brands:instagram': '/icons/instagram.svg',
-  'fa-brands:twitter': '/icons/twitter.svg',
-  'fa6-brands:linkedin-in': '/icons/linkedin.svg',
+  'fa-brands:github-alt': '/social-github.svg',
+  'fa-brands:instagram': '/social-instagram.svg',
+  'fa-brands:twitter': '/social-twitter.svg',
+  'fa6-brands:linkedin-in': '/social-linkedin.svg',
 }
 
 function socialIconPath(icon: string, label: string) {
   if (socialIcons[icon]) return socialIcons[icon]
 
   const normalizedLabel = label.toLowerCase()
-  if (normalizedLabel.includes('linkedin')) return '/icons/linkedin.svg'
-  if (normalizedLabel.includes('github')) return '/icons/github.svg'
-  if (normalizedLabel.includes('instagram')) return '/icons/instagram.svg'
-  return '/icons/twitter.svg'
+  if (normalizedLabel.includes('linkedin')) return '/social-linkedin.svg'
+  if (normalizedLabel.includes('github')) return '/social-github.svg'
+  if (normalizedLabel.includes('instagram')) return '/social-instagram.svg'
+  return '/social-twitter.svg'
 }
 </script>
 

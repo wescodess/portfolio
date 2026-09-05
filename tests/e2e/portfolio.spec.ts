@@ -239,7 +239,7 @@ test('renders every footer social icon from a local asset', async ({ page, reque
   for (const icon of iconAssets) {
     expect(icon.mask).not.toBe('none')
     const assetPath = icon.asset.match(/url\(["']?([^"')]+)/)?.[1]
-    expect(assetPath).toMatch(/^\/icons\/.+\.svg$/)
+    expect(assetPath).toMatch(/^\/social-(linkedin|github|instagram|twitter)\.svg$/)
     expect((await request.get(assetPath!)).ok()).toBe(true)
   }
 })
