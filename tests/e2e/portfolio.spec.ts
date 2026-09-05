@@ -255,11 +255,18 @@ test('serves the projects route and public operational endpoints', async ({ page
   await expect(page.getByRole('heading', { name: /^WACS/ })).toBeVisible()
   await expect(page.getByRole('heading', { name: /^Blackcopper/ })).toBeVisible()
   await expect(page.getByRole('heading', { name: /^SpacePAD/ })).toBeVisible()
+  const buddsCard = page.locator('[data-project-card]').filter({
+    has: page.getByRole('heading', { name: /^Budds/ }),
+  })
+  await expect(buddsCard.locator('> a')).toHaveAttribute(
+    'href',
+    'https://budds.pages.dev',
+  )
   await expect(page.getByText('Organize QR', { exact: true })).toHaveCount(0)
   await expect(page.getByText('Smart Menu', { exact: true })).toHaveCount(0)
   await expect(page.getByText('Nonames', { exact: true })).toHaveCount(0)
-  await expect(page.locator('[data-project-card] > a')).toHaveCount(3)
-  await expect(page.locator('[data-project-card] > div')).toHaveCount(2)
+  await expect(page.locator('[data-project-card] > a')).toHaveCount(4)
+  await expect(page.locator('[data-project-card] > div')).toHaveCount(1)
 
   const health = await request.get('/healthz')
   expect(health.ok()).toBe(true)
