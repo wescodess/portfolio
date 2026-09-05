@@ -51,7 +51,7 @@
               <HomeProjects
                 id="projects"
                 class="w-full bg-black text-white"
-                :projects="content.projects.slice(0, 5)"
+                :projects="content.projects.slice(0, 3)"
               />
               <HomeQuote
                 class="w-full border-y border-grey-700 bg-[#0f0f0f] py-7 text-white"
